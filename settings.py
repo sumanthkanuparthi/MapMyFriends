@@ -19,6 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '@!-&&)u*ouzd5+j6t+r8m=t01s#-j)nnlb9!%poa1(y)s6&j^i'
 
+FACEBOOK_CANVAS_PAGE = 'https://apps.facebook.com/mapppingmyfriends/'
 FACEBOOK_APP_ID = '377790505690272'
 FACEBOOK_APP_SECRET = 'fc8fac91c6971c7f48a44bcb5d78e15b'
 FACEBOOK_DEFAULT_SCOPE = ['email', 'user_about_me', 'user_birthday', 'user_website', 'friends_location']
