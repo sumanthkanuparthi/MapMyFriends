@@ -20,11 +20,6 @@
     ];
 */
 
-    var pics = "{{pic|safe}}"
-    pics = pics.replace(/'/g,"")
-    pics = pics.substring(1,pics.length-1)
-    var img = pics.split(",")  
-    
     var locations = "{{locations}}".replace(/&quot;/g,"")
     locations = locations.substring(1,locations.length-1)
     var arr  = locations.split("],")
@@ -35,27 +30,24 @@
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
     var infowindow = new google.maps.InfoWindow();
- 
+
     var marker, i;
 
     //for (i = 0; i < locations.length; i++) {  
     /*for (i = 0; i < 1; i++) {  
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-       // map: map,
-        icon: img[i]
+        map: map
       });*/
   //var city 
     var x;
  for(i=0;i<arr.length;i++) {
-     window.alert(img[i])
       x = arr[i].split(",")
       //city = x[0].substring(1,x[0].length)
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(parseInt(x[1]), parseInt(x[2])),
         map: map,
-        animation:google.maps.Animation.BOUNCE,
-        icon: img[i]
+        animation:google.maps.Animation.BOUNCE
       });
 
       google.maps.event.addListener(marker, 'click', (function(marker,i) {
