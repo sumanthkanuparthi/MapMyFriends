@@ -21,7 +21,7 @@ SECRET_KEY = '@!-&&)u*ouzd5+j6t+r8m=t01s#-j)nnlb9!%poa1(y)s6&j^i'
 
 FACEBOOK_APP_ID = '377790505690272'
 FACEBOOK_APP_SECRET = 'fc8fac91c6971c7f48a44bcb5d78e15b'
-
+FACEBOOK_DEFAULT_SCOPE = ['email', 'user_about_me', 'user_birthday', 'user_website', 'friends_location']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -69,7 +69,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'django.middleware.clickjacking.XFrameOptionsMiddleware',
      'django_facebook.middleware.FacebookCanvasMiddleWare',
 )
 
