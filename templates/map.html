@@ -20,10 +20,6 @@
     ];
 */
 
-    var pics = "{{pic|safe}}"
-    pics = pics.replace(/'/g,"")
-    pics = pics.substring(1,pics.length-1)
-    var img = pics.split(",")  
     
     var locations = "{{locations}}".replace(/&quot;/g,"")
     locations = locations.substring(1,locations.length-1)
@@ -48,14 +44,13 @@
   //var city 
     var x;
  for(i=0;i<arr.length;i++) {
-     window.alert(img[i])
       x = arr[i].split(",")
       //city = x[0].substring(1,x[0].length)
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(parseInt(x[1]), parseInt(x[2])),
         map: map,
         animation:google.maps.Animation.BOUNCE,
-        icon: img[i]
+        icon: x[3]
       });
 
       google.maps.event.addListener(marker, 'click', (function(marker,i) {
