@@ -39,4 +39,12 @@ def usupp(request):
   return render(request, 'hellodjango/templates/tos.html')
 
 def map(request):
-   return render(request,'hellodjango/templates/mmap.html')
+   graph = get_persistent_graph(request)
+   pics = graph.fql("SELECT pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me())")
+   pic = list()
+   for li in pics:
+     s = li.get('pic_square')
+     if s is not None:
+       pic.append(s.encode('ascii','ignore'))
+   pic=json.dumps(pic)  
+   return render(request,'hellodjango/templates/mmap.html',{'pic':pic})
