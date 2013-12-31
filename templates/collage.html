@@ -1,0 +1,30 @@
+<!--<html> 
+<head> 
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" /> 
+  <title>Google Maps Multiple Markers</title> 
+</head> 
+<body>-->
+  <div id="map" style="width: 200px; height: 200px;"></div>  
+  <script type="text/javascript">
+    var pics = "{{pic}}".replace(/&#39;/g,"")
+    pics = pics.substring(1,pics.length-2)
+    var arr = pics.split("],")
+ 
+ for (var i = 0; i < arr.length; i++) {
+      var x = arr[i].split(",")
+      x[0] = x[0].trim()
+      uid = x[0].substring(1,x[0].length)
+      pic = x[1]
+      var str = "<a href=https://www.facebook.com/"
+      str = str.concat(uid)
+      str = str.concat("><img src=")
+      str = str.concat(pic)
+      str = str.concat("></a>")
+      document.getElementById('map').innerHTML+= str
+
+    }
+  </script>
+  <p>{{pic}}</p>
+<!--</body>
+</html>
+-->

@@ -3,7 +3,9 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" /> 
   <title>Google Maps Multiple Markers</title> 
   <script src="https://maps-api-ssl.google.com/maps/api/js?v=3&&sensor=false" 
-          type="text/javascript"></script>
+    type="text/javascript"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+  </script>
 </head> 
 <body>
   <div id="map" style="width: 1000px; height: 700px;"></div> 
@@ -43,7 +45,7 @@
       });*/
   //var city 
     var x;
- for(i=0;i<arr.length;i++) {
+  for(i=0;i<arr.length;i++) {
       x = arr[i].split(",")
       //city = x[0].substring(1,x[0].length)
       marker = new google.maps.Marker({
@@ -55,12 +57,19 @@
 
       google.maps.event.addListener(marker, 'click', (function(marker,i) {
         return function() {
-          //infowindow.setContent(city);
-          infowindow.setContent(arr[i].split(",")[0].trim().substring(1,arr[i].split(",")[0].length));
-          infowindow.open(map, marker);
+        //infowindow.setContent(city);
+        var city = arr[i].split(",")[0].trim().substring(1,arr[i].split(",")[0].length);
+          load_content(infowindow);
+          $.ajax({
+            url: '/canvas/'+city+'/friends',
+            success: function(data){
+            infowindow.setContent(data);
+            infowindow.open(map, marker);
+          }
+      });
         }
       })(marker,i));
-    }
+  }
   </script>
 <p> {{pic}}</p>
 </body>

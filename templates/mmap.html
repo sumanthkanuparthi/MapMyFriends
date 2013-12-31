@@ -19,10 +19,11 @@
     window.alert(str1)
     document.getElementById('map').innerHTML = str1
 */
- for (i = 0; i < arr.length; i++) { 
-     var str = "<img src="
+ for (i = 0; i < arr.length; i++) {
+     var str = "<a href=https://www.google.com/>"
+     str = str.concat("<img src=")
      str = str.concat(arr[i])
-     str = str.concat(">")
+     str = str.concat("></a>")
     document.getElementById('map').innerHTML+= str
 
     }

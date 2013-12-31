@@ -15,5 +15,7 @@ urlpatterns = patterns('',
     url(r'^canvas/TOS', 'hellodjango.views.tos'),
     url(r'^canvas/privacy-policy', 'hellodjango.views.pp'),
     url(r'^canvas/user-support', 'hellodjango.views.usupp'),
+    url(r'^canvas/rev_geocode', 'hellodjango.views.rev_geocode'),
+    url(r'^canvas/friends/(?P<city>\w+)', 'hellodjango.views.friend_list'),
     url(r'^canvas/', 'hellodjango.views.home'),
 )
