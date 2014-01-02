@@ -1,29 +1,30 @@
-<html> 
-<head> 
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8" /> 
-  <title>Google Maps Multiple Markers</title> 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
-  </script>
-  <script src="https://maps-api-ssl.google.com/maps/api/js?v=3&&sensor=false" 
-          type="text/javascript"></script>
-</head> 
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Google Maps Multiple Markers</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+    </script>
+    <script src="https://maps-api-ssl.google.com/maps/api/js?v=3&&sensor=false" type="text/javascript"></script>
+</head>
+
 <body>
-  <div id="map" style="width: 1000px; height: 700px;"></div> 
-  <script type="text/javascript">
-    var json = "{{me1}}".replace(/&quot;/g,"\"")
-    
-    var locations = "{{locations}}".replace(/&quot;/g,"")
-    var me = "{{me}}".replace(/&quot;/g,"")
-    locations = locations.substring(1,locations.length-1)
-    var arr  = locations.split("],")
- 
+    <div id="map" style="width: 1000px; height: 700px;"></div>
+    <script type="text/javascript">
+    var json = "{{me1}}".replace(/&quot;/g, "\"")
+
+    var locations = "{{locations}}".replace(/&quot;/g, "")
+    var me = "{{me}}".replace(/&quot;/g, "")
+    locations = locations.substring(1, locations.length - 1)
+    var arr = locations.split("],")
+
     var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 2,
-    center: new google.maps.LatLng(22.217920, 16.523438),
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+        zoom: 2,
+        center: new google.maps.LatLng(22.217920, 16.523438),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
     });
- 
-    var marker, i,city;
+
+    var marker, i, city;
     var geocoder = new google.maps.Geocoder();
 
 
@@ -31,42 +32,84 @@
     var cities = [];
     var unmarked_cities = [];
     var marked_cities = [];
-    for(i=1;i<arr.length;i++) {
+    for (i = 1; i < arr.length; i++) {
         x = arr[i].split(",")
         var latlng = new google.maps.LatLng(parseInt(x[1]), parseInt(x[2]));
-        city = x[0].substring(2,x[0].length);
+        city = x[0].substring(2, x[0].length);
         city = city.toLowerCase();
 
-        if(cities.indexOf(city)===-1){
-          cities.push(city);
-          setcontent(city);
+        if (cities.indexOf(city) === -1) {
+            cities.push(city);
+            setcontent(city);
         }
     }
 
     var infowindow = new google.maps.InfoWindow();
-    
-    function setcontent(address) {
-         var marker = new google.maps.Marker({
-           map: map,
-           position: latlng
-           });
-         google.maps.event.addListener(marker, 'click', (function(marker) {
-             return function() {
-               //infowindow.setContent(address);
-               /*$.ajax({
-                url: '/canvas/friends/'+address,
-                dataType: 'html',
-                success: function(data){
-                infowindow.setContent(data);
-                infowindow.open(map, marker);
-                }
-              });
-                infowindow.open(map, marker);*/
-         window.open('/canvas/friends/'+address);
-             }
-         })(marker));
+
+    function renderAsTemplate (data) {
+      var templateStr = "<div>" +
+                          "<a href='https://www.facebook.com/{id}'>" +
+                            "<img src={imgurl} width='100px' height='100px'>" +
+                          "</a>" +
+                        "</div>";
+
+      var htmlString = '';
+
+      for (var i = 0; i < data.length; i += 1) {
+        var id = data[i][0];
+        var imgurl = data[i][1];
+        htmlString += templateStr.replace("{id}", id).replace("{imgurl}", imgurl);
+      }
+      return htmlString;
     }
-  </script>
-<p> {{pic}}</p>
+
+    function setcontent(address) {
+        var str1 = "https://chart.googleapis.com/chart?chst=d_bubble_text_small&chld=bb|";
+        var str2 = "|FF8080|000000"
+        var str3 = str1.concat(address);
+        var link = str3.concat(str2)
+        var icon = {
+            url: link,
+            //size: new google.maps.Size(20, 32),
+            //origin: new google.maps.Point(0,0),
+            //anchor: new google.maps.Point(0, 32)
+        }
+        //console.log(link)
+        var marker = new google.maps.Marker({
+            map: map,
+            position: latlng,
+            icon: icon,
+        });
+
+        google.maps.event.addListener(marker, 'click', (function(marker) {
+            return function() {
+                //infowindow.setContent(address);
+                var str = "/canvas/friends/";
+                var str2 = str.concat(address);
+                var url = encodeURI(str2.trim())
+                console.log(url);
+
+                var jqXhr = $.ajax({
+                    url: url
+                });
+
+                jqXhr.done(function (data) {
+                  console.log(data);
+                  var htmlString = renderAsTemplate(data);
+                  infowindow.setContent(htmlString);
+                  infowindow.open(map, marker);
+                });
+
+                jqXhr.always(function (response) {
+                  console.log(response);
+                });
+
+                infowindow.open(map, marker);
+            };
+        })(marker));
+    }
+    </script>
+    <p>{{pic}}</p>
 </body>
+
 </html>

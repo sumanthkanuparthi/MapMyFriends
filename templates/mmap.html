@@ -6,20 +6,23 @@
           type="text/javascript"></script>
 </head> 
 <body>
-  <div id="map" style="width: 1000px; height: 800px;"></div> 
+  <div id="map" style="width: 1000px; height: 1000px;"></div> 
   <script type="text/javascript">
     var pics = "{{pic}}".replace(/&quot;/g,"")
     pics = pics.substring(1,pics.length-1)
     var arr = pics.split(",")
-    //str = "<img src=https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/273811_1138237869_984934405_q.jpg>"
-    //document.getElementById('map').innerHTML = str
-    /*str1 = "<img src="
-    str1 = str1.concat(arr[0])
-    str1 = str1.concat(">")
-    window.alert(str1)
-    document.getElementById('map').innerHTML = str1
-*/
- for (i = 0; i < arr.length; i++) {
+var i; 
+for (i = 0; i < arr.length/2 - 4; i++) {
+     var str = "<a href=https://www.google.com/>"
+     str = str.concat("<img src=")
+     str = str.concat(arr[i])
+     str = str.concat("></a>")
+    document.getElementById('map').innerHTML+= str
+
+    }
+document.getElementById('map').innerHTML+="<img src=http://3.bp.blogspot.com/-z5xEpvhOlkQ/URZYqsm0leI/AAAAAAAABfc/ojZ7fPYtyaM/s1600/happy-new-year-6-rose-candle-night.jpg width = 1000px height =400px>"
+
+ for (i = arr.length/2 -4; i < arr.length; i++) {
      var str = "<a href=https://www.google.com/>"
      str = str.concat("<img src=")
      str = str.concat(arr[i])

@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django_facebook.api import get_facebook_graph, FacebookUserConverter, get_persistent_graph
 from django_facebook.decorators import facebook_required
+from django.http import HttpResponse
+from math import radians, cos, sin, asin, sqrt
+from haversine import haversine
 import json
 
 city_map = list();
@@ -50,20 +53,30 @@ def map(request):
      s = li.get('pic_square')
      if s is not None:
        pic.append(s.encode('ascii','ignore'))
-   pic=json.dumps(pic)  
+   pic=json.dumps(pic)
    return render(request,'hellodjango/templates/mmap.html',{'pic':pic})
 
 
 @facebook_required
 def friend_list(request,city):
    graph = get_persistent_graph(request)
+   city_temp = city;
+   city.replace("%20"," ");
    city_list = list();
-   for val in  city_map:
-     if(city in val):
-       val.pop(2)
-       city_list.insert(0,val)
-   #return render(request,'hellodjango/templates/home.html',{'me':city_list,'locations':city_map})
-   return render(request,'hellodjango/templates/collage.html',{'pic':city_list})
+   for val in city_map:
+     if(city == val[2]):
+       dup_check = False
+       for users in city_list:
+         if( val[0] == users[0] ):
+           dup_check=True
+       if(dup_check == False ):
+         city_list.insert(0,val)
+   ret_val = json.dumps([dict(mpn=pn) for pn in city_list])
+   # return city_list
+   return HttpResponse(json.dumps(city_list), content_type="application/json")
+   #return ret_val
+   #return render(request,'hellodjango/templates/home.html',{'me':city_temp,'me1':city})
+   #return render(request,'hellodjango/templates/collage.html',{'pic':city_list,'city':city})
 
 @facebook_required
 def rev_geocode(request):
@@ -78,21 +91,38 @@ def rev_geocode(request):
        t = list()
        city = (s.get('city').encode('ascii','ignore'))
        city = city.strip();
-       city_clean = city.lower()
        uid = li.get('uid')
        pic_square = li.get('pic_square').encode('ascii','ignore')
+       lat = s.get('latitude')
+       lang = s.get('longitude')
        user_tuple = list();
+       
+       cond = False
+       for val in g:
+         lat2 = val[1]
+         lang2 = val[2]
+         ll1 = (lat,lang)
+         ll2 = (lat2,lang2)
+         if(haversine(ll1,ll2) <= 50):
+           cond == True
+           city = val[0]
+           break
+       
+       city_clean = city.lower()
        user_tuple.insert(1, uid)       
        user_tuple.insert(2, pic_square)
        user_tuple.insert(3, city_clean)
+       
        city_map.insert(0,user_tuple)
-       t.append(city)
-       t.append(s.get('latitude'))
-       t.append(s.get('longitude'))
-       s1 = li.get('pic_square')
-       if s1 is not None:
-         t.append(s1.encode('ascii','ignore'))
-       g.append(t)
+       if(cond == False):
+         t.append(city)
+         t.append(lat)
+         t.append(lang)
+         s1 = li.get('pic_square')
+         if s1 is not None:
+           t.append(s1.encode('ascii','ignore'))
+         g.append(t)
   g = json.dumps(g)
+  #return render(request,'hellodjango/templates/home.html',{'me':city_map})
   return render(request, 'hellodjango/templates/rev_geocode.html', {'me':me,'locations':g})
   #return render(request, 'hellodjango/templates/home.html', {'me':city_map,'locations':li})
